@@ -1,7 +1,7 @@
 {
-  "name": "newscbot2022",
+  "name": "X P E N T A",
   "version": "1.0.0",
-  "description": "<p align=\"center\"> <img src=\"https://telegra.ph/file/6ab4daac226292a112540.jpg\" alt=\"YUKI BOT\" width=\"500\"/>",
+  "description": "<p align=\"center\"> <img src=\"https://telegra.ph/file/6ab4daac226292a112540.jpg\" alt=\"GOPALASU\" width=\"500\"/>",
   "main": "index.js",
   "type": "module",
   "directories": {
@@ -26,20 +26,20 @@
     "MD",
     "baileys-md"
   ],
-  "homepage": "https://github.com/saipulanuar/RPG-MD-V5",
+  "homepage": "https://github.com/VarrelKun/PentagramMD",
   "author": {
-    "name": "Saipul Anuar"
+    "name": "Gopalasu"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/saipulanuar/RPG-MD-V5.git"
+    "url": "git+https://github.com/VarrelKun/PentagramMD.git"
   },
   "bugs": {
-    "url": "https://github.com/saipulanuar/RPG-MD-V5/issues"
+    "url": "https://github.com/VarrelKun/PentagramMD/issues"
   },
   "license": "ISC",
   "dependencies": {
-    "@adiwajshing/baileys": "github:Saipulanuar/baileys",
+    "@adiwajshing/baileys": "^4.4.0",
     "@bochilteam/scraper": "^2.0.0",
     "@vitalets/google-translate-api": "^8.0.0",
     "awesome-phonenumber": "^2.68.0",
