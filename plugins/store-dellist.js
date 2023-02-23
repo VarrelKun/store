@@ -8,6 +8,5 @@ let handler = async (m, { text, usedPrefix, command }) => {
 handler.help = ['list'].map(v => 'del' + v + ' <teks>')
 handler.tags = ['store']
 handler.command = /^dellist$/i
-handler.group = true
-handler.admin = true
+
 export default handler
