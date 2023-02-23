@@ -13,7 +13,4 @@ handler.help = ['list'].map(v => 'add' + v + ' <teks>')
 handler.tags = ['store']
 handler.command = /^addlist$/i
 
-handler.group = true
-handler.admin = true
-
 export default handler
