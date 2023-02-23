@@ -9,14 +9,15 @@ let handler = async (m, { conn, usedPrefix, command }) => {
 	let button = {
 		buttonText: 'LIST STORE',
 		description: 'Berikut daftar Menu yg Ada di List store...',
-		footerText: wm
+		footerText: '© Ryhn Store'
+
 	}
 	if (msg[0]) return await conn.sendListM(m.chat, button, row, m)
 	else throw `\nbelum ada Menu yg Ada di list store.\nketik *${usedPrefix + command} <teks>* untuk menambahkan daftar menu.\n`
 }
 handler.help = ['store'].map(v => 'list' + v)
 handler.tags = ['database']
-handler.command = /^list(store|shop)?$/i
+handler.command = /^list|menu(store|shop)?$/i
 
 export default handler
 
