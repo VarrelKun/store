@@ -29,11 +29,10 @@ import {
   mongoDB,
   mongoDBV2
 } from './lib/mongoDB.js';
-import store from './lib/storee.js'
 const {
-  // useSingleFileAuthState,
+  useMultiFileAuthState,
   DisconnectReason
-} = await import('@adiwajshing/baileys');
+} = await import('@adiwajshing/baileys')
 
 const { CONNECTING } = ws
 const { chain } = lodash
@@ -51,7 +50,7 @@ global.timestamp = {
 const __dirname = global.__dirname(import.meta.url)
 
 global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
-global.prefix = new RegExp('^[' + (opts['prefix'] || '‎\/!#.\\').replace(/[|\\{}()[\]^$+*?.\-\^]/g, '\\$&') + ']')
+global.prefix = new RegExp('^[' + (opts['prefix'] || '‎\/!#.@\\').replace(/[|\\{}()[\]^$+*?.\-\^]/g, '\\$&') + ']')
 
 global.db = new Low(
   /https?:\/\//.test(opts['db'] || '') ?
@@ -86,14 +85,14 @@ global.loadDatabase = async function loadDatabase() {
 }
 loadDatabase()
 
-global.authFile = `${opts._[0] || 'ryhn'}.data.json`
-const { state, saveState } = store.useSingleFileAuthState(global.authFile)
+global.authFile = `${opts._[0] || 'kannabot'}.data.json`
+console.log(`Load AuthFile from ${authFile}`)
+const { state, saveCreds } = await useMultiFileAuthState(global.authFile)
 
 const connectionOptions = {
   printQRInTerminal: true,
   auth: state,
-  // logger: pino({ level: 'trace' })
-  // logger: pino({ level: 'silent' })
+  logger: pino({ level: 'silent' })
 }
 
 global.conn = makeWASocket(connectionOptions)
@@ -122,8 +121,6 @@ function clearTmp() {
   })
 }
 
-
-
 async function connectionUpdate(update) {
   const { connection, lastDisconnect, isNewLogin } = update
   if (isNewLogin) conn.isInit = true
@@ -131,17 +128,14 @@ async function connectionUpdate(update) {
   if (code && code !== DisconnectReason.loggedOut && conn?.ws.readyState !== CONNECTING) {
     console.log(await global.reloadHandler(true).catch(console.error))
     global.timestamp.connect = new Date
-    
   }
-  if (global.db.data == null) loadDatabase()
-}
+ }
 
 
 process.on('uncaughtException', console.error)
 // let strQuot = /(["'])(?:(?=(\\?))\2.)*?\1/
 
-let isInit = true;
-let handler = await import('./handler.js')
+let isInit = true, handler
 global.reloadHandler = async function (restatConn) {
   try {
     const Handler = await import(`./handler.js?update=${Date.now()}`).catch(console.error)
@@ -165,8 +159,8 @@ global.reloadHandler = async function (restatConn) {
     conn.ev.off('creds.update', conn.credsUpdate)
   }
 
-  conn.welcome = '✧━━━━━━[ *WELCOME* ]━━━━━━✧\n\n┏––––––━━━━━━━━•\n│⫹⫺ @subject\n┣━━━━━━━━┅┅┅\n│( 👋 Hallo @user)\n├[ *INTRO* ]—\n│ *Nama:* \n│ *Umur:* \n│ *Gender:*\n┗––––––━━┅┅┅\n\n––––––┅┅ *DESCRIPTION* ┅┅––––––\n@desc'
-  conn.bye = '✧━━━━━━[ *GOOD BYE* ]━━━━━━✧\nSayonara *@user* 👋( ╹▽╹ )'
+  conn.welcome = '✦━━━━━━[ *WELCOME* ]━━━━━━✦\n\n┏––––––━━━━━━━━•\n│⫹⫺ @subject\n┣━━━━━━━━┅┅┅\n│( 👋 Hallo @user)\n├[ *INTRO* ]—\n│ *Nama:* \n│ *Umur:* \n│ *Gender:*\n┗––––––━━┅┅┅\n\n––––––┅┅ *DESCRIPTION* ┅┅––––––\n@desc'
+  conn.bye = '✦━━━━━━[ *GOOD BYE* ]━━━━━━✦\nSayonara *@user* 👋( ╹▽╹ )'
   conn.spromote = '@user sekarang admin!'
   conn.sdemote = '@user sekarang bukan admin!'
   conn.sDesc = 'Deskripsi telah diubah ke \n@desc'
@@ -178,8 +172,8 @@ global.reloadHandler = async function (restatConn) {
   conn.groupsUpdate = handler.groupsUpdate.bind(global.conn)
   conn.onDelete = handler.deleteUpdate.bind(global.conn)
   conn.connectionUpdate = connectionUpdate.bind(global.conn)
-  conn.credsUpdate = saveState.bind(global.conn)
-
+  conn.credsUpdate = saveCreds.bind(global.conn)
+ 
   conn.ev.on('messages.upsert', conn.handler)
   conn.ev.on('group-participants.update', conn.participantsUpdate)
   conn.ev.on('groups.update', conn.groupsUpdate)
